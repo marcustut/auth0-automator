@@ -87,20 +87,20 @@ jobs:
 
       - name: Rename to exclude Git SHA
         run: |
-          mv dist/node${{ matrix.node-version }}-win-x64-${{ github.sha }} dist/node${{ matrix.node-version }}-win-x64
-          mv dist/node${{ matrix.node-version }}-win-arm64-${{ github.sha }} dist/node${{ matrix.node-version }}-win-arm64
-          mv dist/node${{ matrix.node-version }}-macos-x64-${{ github.sha }} dist/node${{ matrix.node-version }}-macos-x64
-          mv dist/node${{ matrix.node-version }}-macos-arm64-${{ github.sha }} dist/node${{ matrix.node-version }}-macos-arm64
-          mv dist/node${{ matrix.node-version }}-linux-x64-${{ github.sha }} dist/node${{ matrix.node-version }}-linux-x64
-          mv dist/node${{ matrix.node-version }}-linux-arm64-${{ github.sha }} dist/node${{ matrix.node-version }}-linux-arm64
+          mv /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/dist/node${{ matrix.node-version }}-win-x64-${{ github.sha }} node${{ matrix.node-version }}-win-x64
+          mv /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/dist/node${{ matrix.node-version }}-win-arm64-${{ github.sha }} node${{ matrix.node-version }}-win-arm64
+          mv /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/dist/node${{ matrix.node-version }}-macos-x64-${{ github.sha }} node${{ matrix.node-version }}-macos-x64
+          mv /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/dist/node${{ matrix.node-version }}-macos-arm64-${{ github.sha }} node${{ matrix.node-version }}-macos-arm64
+          mv /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/dist/node${{ matrix.node-version }}-linux-x64-${{ github.sha }} node${{ matrix.node-version }}-linux-x64
+          mv /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/dist/node${{ matrix.node-version }}-linux-arm64-${{ github.sha }} node${{ matrix.node-version }}-linux-arm64
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/node${{ matrix.node-version }}-win-x64
-            dist/node${{ matrix.node-version }}-win-arm64
-            dist/node${{ matrix.node-version }}-macos-x64
-            dist/node${{ matrix.node-version }}-macos-arm64
-            dist/node${{ matrix.node-version }}-linux-x64
-            dist/node${{ matrix.node-version }}-linux-arm64
+            node${{ matrix.node-version }}-win-x64
+            node${{ matrix.node-version }}-win-arm64
+            node${{ matrix.node-version }}-macos-x64
+            node${{ matrix.node-version }}-macos-arm64
+            node${{ matrix.node-version }}-linux-x64
+            node${{ matrix.node-version }}-linux-arm64
