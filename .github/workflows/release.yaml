@@ -13,8 +13,8 @@ jobs:
         arch:
           - x64
           - arm64
-        node-version:
-          - node16
+        node-version: 
+          - 16
         os:
           - linux
           - macos
@@ -24,9 +24,22 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ matrix.node-version }}
 
-      - name: install pnpm@8.5.1
+      - name: Set outputs
+        id: pkg-action
+        run: |
+          echo "::group::Setting outputs"
+          if [ "${{ matrix.os }}" == "win" ]; then
+            echo "file=dist/$(node -p "require('./package.json').name").exe" >> $GITHUB_OUTPUT
+          else
+            echo "file=dist/$(node -p "require('./package.json').name")" >> $GITHUB_OUTPUT
+          fi
+
+          echo "artifact-key=${{ github.event.repository.name }}-node${{ matrix.node-version }}-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "::endgroup::"
+
+      - name: Install pnpm@8.5.1
         run: npm i -g pnpm@8.5.1
 
       - name: Install Dependencies
@@ -35,17 +48,49 @@ jobs:
       - name: Build the executable
         run: pnpm build
 
-      - id: package
-        name: Package into node binary
-        uses: lando/pkg-action@v2
+      - name: Install pkg@5.8.1
+        run: |
+          npm install -g pkg@5.8.1
+          if pkg --version >/dev/null; then
+            echo "::notice title=pkg installed::Using version $(pkg --version)"
+          else
+            echo "::error title=Cannot run pkg::Cannot seem to find the pkg binary"
+          fi
+
+      - name: Package into node binary
+        run: |
+          pkg \
+            --target=node${{ matrix.node-version }}-${{ matrix.os }}-${{ matrix.arch }} \
+            --out-path dist \
+            --debug \
+            .
+
+      - name: Upload ${{ steps.pkg-action.outputs.artifact-key }}
+        uses: actions/upload-artifact@v3
         with:
-          entrypoint: build/index.js
-          arch: ${{ matrix.arch }}
-          node-version: ${{ matrix.node-version }}
-          os: ${{ matrix.os }}
+          name: ${{ steps.pkg-action.outputs.artifact-key }}
+          path: ${{ steps.pkg-action.outputs.file }}
+          if-no-files-found: error
+          retention-days: 1
+
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: 
+          - 16
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: dist
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ steps.package.outputs.file }}
+          files: |
+            dist/node${{ matrix.node-version }}-win-x64
+            dist/node${{ matrix.node-version }}-win-arm64
+            dist/node${{ matrix.node-version }}-macos-x64
+            dist/node${{ matrix.node-version }}-macos-arm64
+            dist/node${{ matrix.node-version }}-linux-x64
+            dist/node${{ matrix.node-version }}-linux-arm64
