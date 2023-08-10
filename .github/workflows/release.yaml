@@ -85,6 +85,15 @@ jobs:
         with:
           path: dist
 
+      - name: Rename to exclude Git SHA
+        run: |
+          mv dist/node${{ matrix.node-version }}-win-x64-${{ github.sha }} dist/node${{ matrix.node-version }}-win-x64
+          mv dist/node${{ matrix.node-version }}-win-arm64-${{ github.sha }} dist/node${{ matrix.node-version }}-win-arm64
+          mv dist/node${{ matrix.node-version }}-macos-x64-${{ github.sha }} dist/node${{ matrix.node-version }}-macos-x64
+          mv dist/node${{ matrix.node-version }}-macos-arm64-${{ github.sha }} dist/node${{ matrix.node-version }}-macos-arm64
+          mv dist/node${{ matrix.node-version }}-linux-x64-${{ github.sha }} dist/node${{ matrix.node-version }}-linux-x64
+          mv dist/node${{ matrix.node-version }}-linux-arm64-${{ github.sha }} dist/node${{ matrix.node-version }}-linux-arm64
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
