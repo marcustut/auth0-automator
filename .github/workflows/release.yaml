@@ -74,6 +74,7 @@ jobs:
           retention-days: 1
 
   release:
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
