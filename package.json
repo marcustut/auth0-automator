@@ -1,0 +1,45 @@
+{
+  "name": "auth0-automator",
+  "version": "0.0.1",
+  "description": "A tool to bootstrap or destroy Auth0 resources using a configuration file.",
+  "scripts": {
+    "bootstrap": "pnpm tsx src/main.ts bootstrap",
+    "destroy": "pnpm tsx src/main.ts destroy",
+    "build": "node build.mjs && pkg . --targets node14-macos-x64 --output auth0-automator"
+  },
+  "bin": {
+    "auth0-automator": "build/index.js"
+  },
+  "pkg": {
+    "scripts": "build/**/*.js"
+  },
+  "keywords": [
+    "auth0",
+    "automation",
+    "cloud"
+  ],
+  "author": "Marcus Lee (marcustutorial@hotmail.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "@types/auth0": "^3.3.3",
+    "@types/minimist": "^1.2.2",
+    "@types/node": "^20.4.9",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "auth0": "^3.6.0",
+    "effect": "2.0.0-next.24",
+    "esbuild": "^0.19.0",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "minimist": "^1.2.8",
+    "pkg": "^5.8.1",
+    "prettier": "^3.0.1",
+    "ts-dotenv": "^0.9.1",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6",
+    "yaml": "^2.3.1",
+    "zod": "^3.21.4"
+  }
+}

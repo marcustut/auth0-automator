@@ -1,0 +1,51 @@
+name: Build native binaries and create GitHub Release
+
+on:
+  push:
+    # Publish semver tags as releases
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+        node-version:
+          - node16
+        os:
+          - linux
+          - macos
+          - win
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: install pnpm@8.5.1
+        run: npm i -g pnpm@8.5.1
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the executable
+        run: pnpm build
+
+      - id: package
+        name: Package into node binary
+        uses: lando/pkg-action@v2
+        with:
+          entrypoint: build/index.js
+          arch: ${{ matrix.arch }}
+          node-version: ${{ matrix.node-version }}
+          os: ${{ matrix.os }}
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{ steps.package.outputs.file }}

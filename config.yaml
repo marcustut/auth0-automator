@@ -1,0 +1,61 @@
+applications:
+  apis:
+    - name: Cybotrade API
+      identifier: https://localhost:3000
+      token_dialect: access_token_authz # include permissions in the access_token
+      enforce_policies: true # enable RBAC
+      scopes:
+        - value: read:strategies
+          description: Read strategies
+
+  clients:
+    - name: Cybotrade
+      description: Next.js application for Cybotrade.
+      app_type: regular_web
+      callbacks: 
+        - http://localhost:3000/api/auth/callback
+      allowed_logout_urls: 
+        - http://localhost:3000
+
+  roles:
+    - name: Free
+      description: Users that has no active subscriptions.
+      permissions:
+        - resource_server_identifier: https://localhost:3000
+          permission_name: read:strategies
+
+    - name: StrategyReadOnlyAccess
+      description: Allow read-only access to strategies.
+      permissions:
+        - resource_server_identifier: https://localhost:3000
+          permission_name: read:strategies
+
+    - name: StrategyFullAccess
+      description: Allow full access to strategies.
+      permissions:
+        - resource_server_identifier: https://localhost:3000
+          permission_name: create:strategies
+        - resource_server_identifier: https://localhost:3000
+          permission_name: read:strategies
+        - resource_server_identifier: https://localhost:3000
+          permission_name: update:strategies
+        - resource_server_identifier: https://localhost:3000
+          permission_name: delete:strategies
+
+    - name: ArenaReadOnlyAccess
+      description: Allow read-only access to arenas.
+      permissions:
+        - resource_server_identifier: https://localhost:3000
+          permission_name: read:arenas
+
+    - name: ArenaFullAccess
+      description: Allow full access to arenas.
+      permissions:
+        - resource_server_identifier: https://localhost:3000
+          permission_name: create:arenas
+        - resource_server_identifier: https://localhost:3000
+          permission_name: read:arenas
+        - resource_server_identifier: https://localhost:3000
+          permission_name: update:arenas
+        - resource_server_identifier: https://localhost:3000
+          permission_name: delete:arenas
