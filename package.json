@@ -5,7 +5,8 @@
   "scripts": {
     "bootstrap": "pnpm tsx src/main.ts bootstrap",
     "destroy": "pnpm tsx src/main.ts destroy",
-    "build": "node build.mjs && pkg . --targets node14-macos-x64 --output auth0-automator"
+    "build": "node build.mjs",
+    "package:macos-x64": "pkg . --targets node16-macos-x64 --output auth0-automator"
   },
   "bin": {
     "auth0-automator": "build/index.js"
