@@ -1,5 +1,8 @@
 name: Build native binaries and create GitHub Release
 
+permissions:
+  contents: write
+
 on:
   push:
     # Publish semver tags as releases
